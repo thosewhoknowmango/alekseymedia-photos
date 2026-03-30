@@ -342,18 +342,21 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── Preloader
+// Preloader only inside load
 window.addEventListener('load', function() {
   setTimeout(function() {
     var pre = document.getElementById('preloader');
     pre.classList.add('hide');
-    pre.style.pointerEvents = 'none'; // ← ADD THIS
+    pre.style.pointerEvents = 'none';
   }, 1800);
+}); // ← close it HERE
 
-// ── Cursor
+// ── Cursor (runs immediately, not gated on load)
 const cur = document.getElementById('cur');
 document.addEventListener('mousemove', e => {
   cur.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
 });
+// ... rest of your code continues outside load
 document.querySelectorAll('a, button, .card, .svc, .clink').forEach(el => {
   el.addEventListener('mouseenter', () => cur.classList.add('expand'));
   el.addEventListener('mouseleave', () => cur.classList.remove('expand'));
