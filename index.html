@@ -590,8 +590,6 @@ const co = new IntersectionObserver(es => {
     const el = e.target;
     const target = parseInt(el.dataset.target);
     if(isNaN(target)) return;
-    const suffix = el.dataset.suffix || '';
-    const inner = el.querySelector('span');
     const dur = target > 50 ? 1800 : 1100;
     const t0 = performance.now();
     const tick = now => {
@@ -604,7 +602,7 @@ const co = new IntersectionObserver(es => {
     requestAnimationFrame(tick);
     co.unobserve(el);
   });
-}, {threshold: 0.5});
+}, { threshold: 0.5 });
 document.querySelectorAll('.stat-n[data-target]').forEach(el => co.observe(el));
 </script>
 <script src="script.js" defer></script>
