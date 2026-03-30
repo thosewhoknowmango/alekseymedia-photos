@@ -342,11 +342,12 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── Preloader
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('preloader').classList.add('hide');
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    var pre = document.getElementById('preloader');
+    pre.classList.add('hide');
+    pre.style.pointerEvents = 'none'; // ← ADD THIS
   }, 1800);
-});
 
 // ── Cursor
 const cur = document.getElementById('cur');
