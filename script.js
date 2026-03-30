@@ -1,4 +1,73 @@
 
+// ── LIGHTBOX SPINNER INJECTION ──────────────────────────────
+(function() {
+  // Inject CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    #lb-spinner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(8,8,8,.6);
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease;
+    }
+    #lb-spinner.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .lb-spin-ring {
+      width: 36px;
+      height: 36px;
+      border: 2px solid rgba(240,237,230,.1);
+      border-top-color: #ff2b1e;
+      border-radius: 50%;
+      animation: lbSpin .65s linear infinite;
+    }
+    @keyframes lbSpin { to { transform: rotate(360deg); } }
+  `;
+  document.head.appendChild(style);
+
+  // Inject spinner div into lightbox wrap once DOM is ready
+  document.addEventListener('DOMContentLoaded', function() {
+    const wrap = document.getElementById('lb-img-wrap');
+    if (wrap) {
+      const spinner = document.createElement('div');
+      spinner.id = 'lb-spinner';
+      spinner.innerHTML = '<div class="lb-spin-ring"></div>';
+      wrap.appendChild(spinner);
+    }
+
+    // Patch the lb-img element to show spinner on every src change
+    const img = document.getElementById('lb-img');
+    if (img) {
+      const spinner = document.getElementById('lb-spinner');
+
+      // Watch for src changes using a MutationObserver
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          if (m.attributeName === 'src') {
+            if (spinner) spinner.classList.add('visible');
+          }
+        });
+      });
+      observer.observe(img, { attributes: true, attributeFilter: ['src'] });
+
+      img.addEventListener('load', function() {
+        if (spinner) spinner.classList.remove('visible');
+      });
+      img.addEventListener('error', function() {
+        if (spinner) spinner.classList.remove('visible');
+      });
+    }
+  });
+})();
+// ── END SPINNER ──────────────────────────────────────────────
+
 const translations = {
   en: {
     nav_about: "About",
