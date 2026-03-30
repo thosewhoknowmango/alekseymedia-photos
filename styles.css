@@ -113,12 +113,11 @@ nav.stuck{
 .nav-links a:hover{color:var(--ink);}
 
 /* ── PRELOADER ──────────────────────────────── */
-#preloader{
-  position:fixed;inset:0;z-index:999999;
-  background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:20px;
-  transition:opacity .6s var(--ease), visibility .6s;
+#preloader.hide {
+  opacity: 0;
+  visibility: hidden;       /* ← add this */
+  pointer-events: none;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 #preloader.hide {
   opacity: 0;
