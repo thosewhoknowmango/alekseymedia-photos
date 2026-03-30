@@ -293,6 +293,7 @@
   <button id="lb-prev">←</button>
   <button id="lb-next">→</button>
   <div id="lb-img-wrap">
+     <div id="lb-spinner"><div class="lb-spin-ring"></div></div>
     <img id="lb-img" src="" alt="" style="width:100%;height:100%;object-fit:contain;display:block;">
   </div>
   <div id="lb-info">
@@ -495,18 +496,32 @@ function closeLb(){
   document.body.style.cursor = 'none';
   document.title = originalTitle;
 }
-function showLbPhoto(){
+function showLbPhoto() {
   const img = document.getElementById('lb-img');
-  img.style.opacity = '0';
+  const spinner = document.getElementById('lb-spinner');
+
+  img.style.opacity = 0;
   img.style.transition = 'opacity 0.25s ease';
+  if (spinner) spinner.classList.add('visible');
+
   setTimeout(() => {
     img.src = currentPhotos[lbIndex];
     img.alt = '';
-    img.onload = () => { img.style.opacity = '1'; };
-    // if already cached
-    if(img.complete) img.style.opacity = '1';
+    img.onload = () => {
+      img.style.opacity = 1;
+      if (spinner) spinner.classList.remove('visible');
+    };
+    img.onerror = () => {
+      if (spinner) spinner.classList.remove('visible');
+    };
+    // if already cached, hide spinner immediately
+    if (img.complete && img.naturalWidth > 0) {
+      img.style.opacity = 1;
+      if (spinner) spinner.classList.remove('visible');
+    }
   }, 80);
-  document.getElementById('lb-counter').textContent = (lbIndex + 1) + ' / ' + currentPhotos.length;
+
+  document.getElementById('lb-counter').textContent = `${lbIndex + 1} / ${currentPhotos.length}`;
   document.title = originalTitle;
 }
 function prevLb(){ lbIndex = (lbIndex - 1 + currentPhotos.length) % currentPhotos.length; showLbPhoto(); }
