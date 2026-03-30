@@ -1,59 +1,4 @@
 
-// ── LIGHTBOX SPINNER ────────────────────────────────────────
-const _lbSpinnerStyle = document.createElement('style');
-_lbSpinnerStyle.textContent = `
-  #lb-spinner {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(8,8,8,.6);
-    z-index: 10;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .15s ease;
-  }
-  #lb-spinner.visible {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .lb-spin-ring {
-    width: 36px;
-    height: 36px;
-    border: 2px solid rgba(240,237,230,.1);
-    border-top-color: #ff2b1e;
-    border-radius: 50%;
-    animation: lbSpin .65s linear infinite;
-  }
-  @keyframes lbSpin { to { transform: rotate(360deg); } }
-`;
-document.head.appendChild(_lbSpinnerStyle);
-
-window.addEventListener('load', function() {
-  const wrap = document.getElementById('lb-img-wrap');
-  if (wrap && !document.getElementById('lb-spinner')) {
-    const spinner = document.createElement('div');
-    spinner.id = 'lb-spinner';
-    spinner.innerHTML = '<div class="lb-spin-ring"></div>';
-    wrap.appendChild(spinner);
-  }
-  const img = document.getElementById('lb-img');
-  if (img) {
-    const getSpinner = () => document.getElementById('lb-spinner');
-    new MutationObserver(function(mutations) {
-      mutations.forEach(function(m) {
-        if (m.attributeName === 'src') {
-          const s = getSpinner();
-          if (s) s.classList.add('visible');
-        }
-      });
-    }).observe(img, { attributes: true, attributeFilter: ['src'] });
-    img.addEventListener('load', () => { const s = getSpinner(); if (s) s.classList.remove('visible'); });
-    img.addEventListener('error', () => { const s = getSpinner(); if (s) s.classList.remove('visible'); });
-  }
-});
-// ── END SPINNER ──────────────────────────────────────────────
 
 const translations = {
   en: {
@@ -305,5 +250,30 @@ function setLang(lang, skipOverlay){
     }, 900);
   });
 }
+
+// Spinner setup — runs after everything else is defined
+window.addEventListener('load', function() {
+  const wrap = document.getElementById('lb-img-wrap');
+  if (wrap && !document.getElementById('lb-spinner')) {
+    const sp = document.createElement('div');
+    sp.id = 'lb-spinner';
+    sp.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,8,8,.6);z-index:10;opacity:0;pointer-events:none;transition:opacity .15s ease;';
+    sp.innerHTML = '<div style="width:36px;height:36px;border:2px solid rgba(240,237,230,.1);border-top-color:#ff2b1e;border-radius:50%;animation:lbSpin .65s linear infinite;"></div>';
+    wrap.appendChild(sp);
+    const style = document.createElement('style');
+    style.textContent = '@keyframes lbSpin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+    const img = document.getElementById('lb-img');
+    if (img) {
+      new MutationObserver(function(m) {
+        m.forEach(function(x) {
+          if (x.attributeName === 'src') sp.style.opacity = '1';
+        });
+      }).observe(img, { attributes: true, attributeFilter: ['src'] });
+      img.addEventListener('load', function() { sp.style.opacity = '0'; });
+      img.addEventListener('error', function() { sp.style.opacity = '0'; });
+    }
+  }
+});
 
 setLang('en', true);
