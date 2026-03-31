@@ -1,5 +1,3 @@
-
-
 const translations = {
   en: {
     nav_about: "About",
@@ -328,14 +326,16 @@ window.addEventListener('load', function() {
   // Insert as first child so it sits on top of everything
   document.body.insertBefore(splash, document.body.firstChild);
 
-  // Trigger animations on next frame
-  requestAnimationFrame(function() {
-    requestAnimationFrame(function() {
-      logo.style.opacity = '1';
-      logo.style.transform = 'translateY(0)';
-      bar.style.width = '120px';
-    });
-  });
+  // Force a reflow so Chrome flushes the initial styles before transitioning.
+  // Double-rAF is unreliable in Chrome — it often batches both frames together,
+  // skipping the initial state and breaking the CSS transitions.
+  void splash.offsetWidth;
+  void logo.offsetWidth;
+  void bar.offsetWidth;
+
+  logo.style.opacity = '1';
+  logo.style.transform = 'translateY(0)';
+  bar.style.width = '120px';
 
   // After 1.8s — fade out and remove
   setTimeout(function() {
