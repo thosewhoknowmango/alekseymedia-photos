@@ -276,4 +276,73 @@ window.addEventListener('load', function() {
   }
 });
 
-setLang('en', true);
+// ── Full-screen intro splash on first page load ──────────────────────────────
+(function showIntroSplash() {
+  // Apply language silently first so page content is ready behind the overlay
+  setLang('en', true);
+
+  // Hide page content while splash is showing
+  document.documentElement.style.overflow = 'hidden';
+
+  const splash = document.createElement('div');
+  splash.id = 'intro-splash';
+  splash.style.cssText = [
+    'position:fixed',
+    'inset:0',
+    'background:#080808',
+    'z-index:999999',
+    'display:flex',
+    'flex-direction:column',
+    'align-items:center',
+    'justify-content:center',
+    'gap:18px',
+    'opacity:1',
+    'transition:opacity 0.55s ease'
+  ].join(';');
+
+  // Logo text
+  const logo = document.createElement('div');
+  logo.style.cssText = [
+    "font-family:'Bebas Neue',sans-serif",
+    'font-size:clamp(38px,8vw,72px)',
+    'letter-spacing:.12em',
+    'color:#f0ede6',
+    'opacity:0',
+    'transform:translateY(20px)',
+    'transition:opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s'
+  ].join(';');
+  logo.innerHTML = 'ALEKSEY<span style="color:#ff2b1e">MEDIA</span>';
+
+  // Red line
+  const bar = document.createElement('div');
+  bar.style.cssText = [
+    'height:1px',
+    'width:0',
+    'background:#ff2b1e',
+    'transition:width 0.6s ease 0.25s'
+  ].join(';');
+
+  splash.appendChild(logo);
+  splash.appendChild(bar);
+
+  // Insert as first child so it sits on top of everything
+  document.body.insertBefore(splash, document.body.firstChild);
+
+  // Trigger animations on next frame
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      logo.style.opacity = '1';
+      logo.style.transform = 'translateY(0)';
+      bar.style.width = '120px';
+    });
+  });
+
+  // After 1.8s — fade out and remove
+  setTimeout(function() {
+    splash.style.opacity = '0';
+    document.documentElement.style.overflow = '';
+    setTimeout(function() {
+      splash.remove();
+    }, 600);
+  }, 1800);
+})();
