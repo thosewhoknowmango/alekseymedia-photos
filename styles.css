@@ -747,6 +747,11 @@ footer{position:relative;}
   .svc-grid{grid-template-columns:1fr;}
   .contact-top{flex-direction:column;gap:32px;}
   footer{flex-direction:column;gap:10px;text-align:center;}
+  .foot-mark {
+  position: relative;
+  left: auto;
+  transform: none;
+}
 }
 @media(max-width:560px){
   /* Nav */
