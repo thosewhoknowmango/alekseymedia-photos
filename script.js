@@ -380,7 +380,21 @@ window.addEventListener('load', function() {
     toast.appendChild(close);
     wrap.appendChild(toast);
     requestAnimationFrame(function() { toast.classList.add('on'); });
-    try { var a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.type='sine';o.frequency.setValueAtTime(800,a.currentTime);o.frequency.exponentialRampToValueAtTime(520,a.currentTime+0.12);g.gain.setValueAtTime(0.07,a.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+0.2);o.start();o.stop(a.currentTime+0.2); } catch(e) {}
+    try {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      var ctx = new AudioCtx();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(520, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.25);
+    } catch(e) { console.log('sound error:', e); }
     function remove() {
       toast.classList.remove('on');
       toast.classList.add('hide');
