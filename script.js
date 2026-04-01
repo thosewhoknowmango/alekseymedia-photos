@@ -346,3 +346,92 @@ window.addEventListener('load', function() {
     }, 600);
   }, 1800);
 })();
+
+
+// Soft corner notifications (non-intrusive)
+(function() {
+  const MAX_TOASTS = 3;
+  const INITIAL_MIN_DELAY = 25000; // 25s
+  const INITIAL_MAX_DELAY = 45000; // 45s
+  const NEXT_MIN_DELAY = 60000;    // 60s
+  const NEXT_MAX_DELAY = 120000;   // 120s
+  const AUTO_HIDE_MS = 8000;       // 8s
+
+  const messages = [
+    'Also check out my partners.',
+    'Support my work on the upcoming links.',
+    'Want to work together? Send a quick message.',
+    'Follow @alekseymedia.lv for more content.',
+  ];
+
+  function createToastContainer() {
+    let wrap = document.querySelector('.site-toast-wrap');
+    if (wrap) return wrap;
+    wrap = document.createElement('div');
+    wrap.className = 'site-toast-wrap';
+    document.body.appendChild(wrap);
+    return wrap;
+  }
+
+  function showToast() {
+    if (window.matchMedia && window.matchMedia('(max-width: 560px)').matches) return; // skip toast on very small screens
+
+    const wrap = createToastContainer();
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+
+    const toast = document.createElement('div');
+    toast.className = 'site-toast';
+
+    const text = document.createElement('div');
+    text.className = 'site-toast-text';
+    text.textContent = msg;
+
+    const close = document.createElement('button');
+    close.className = 'site-toast-close';
+    close.type = 'button';
+    close.innerHTML = '×';
+
+    toast.appendChild(text);
+    toast.appendChild(close);
+    wrap.appendChild(toast);
+
+    // Trigger entrance animation
+    requestAnimationFrame(function() {
+      toast.classList.add('on');
+    });
+
+    function removeToast() {
+      toast.classList.remove('on');
+      toast.classList.add('hide');
+      setTimeout(function() {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 300);
+    }
+
+    close.addEventListener('click', removeToast);
+    setTimeout(removeToast, AUTO_HIDE_MS);
+  }
+
+  function scheduleToasts() {
+    let shown = 0;
+
+    function scheduleNext(minDelay, maxDelay) {
+      if (shown >= MAX_TOASTS) return;
+      const delay = minDelay + Math.random() * (maxDelay - minDelay);
+      setTimeout(function() {
+        shown++;
+        showToast();
+        scheduleNext(NEXT_MIN_DELAY, NEXT_MAX_DELAY);
+      }, delay);
+    }
+
+    scheduleNext(INITIAL_MIN_DELAY, INITIAL_MAX_DELAY);
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    scheduleToasts();
+  } else {
+    document.addEventListener('DOMContentLoaded', scheduleToasts);
+  }
+})();
+
