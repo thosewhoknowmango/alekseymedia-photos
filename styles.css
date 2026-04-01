@@ -430,8 +430,7 @@ h1.hero-name{
 .bento {
   display: grid;
   grid-template-columns: repeat(24, 1fr);
-  grid-template-rows: 320px 240px;
-  grid-auto-rows: 240px; /* implicit rows get this height */
+  grid-template-rows: 320px 240px 240px; /* ← change this line */
   gap: 8px;
 }
 .card{
@@ -890,11 +889,11 @@ body.lang-ru .hero-name {
   pointer-events: auto;
   background: rgba(17,17,16,0.95);
   border: 1px solid rgba(255,255,255,0.10);
-  padding: 9px 12px 9px 14px;
-  max-width: 220px;
+  padding: 13px 18px 13px 20px;   /* bigger padding */
+  max-width: 300px;                /* wider */
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   border-radius: 999px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.5);
   opacity: 0;
@@ -905,7 +904,7 @@ body.lang-ru .hero-name {
 .site-toast.hide { opacity: 0; transform: translateY(8px); }
 .site-toast-text {
   font-family: var(--syne);
-  font-size: 10px;
+  font-size: 12px;   /* bigger text */
   color: var(--mid);
   line-height: 1.4;
 }
@@ -913,7 +912,7 @@ body.lang-ru .hero-name {
   background: none;
   border: none;
   color: var(--dim);
-  font-size: 13px;
+  font-size: 16px;   /* bigger × button */
   line-height: 1;
   padding: 2px 2px 2px 6px;
   cursor: pointer;

@@ -383,17 +383,33 @@ window.addEventListener('load', function() {
     try {
       var AudioCtx = window.AudioContext || window.webkitAudioContext;
       var ctx = new AudioCtx();
-      var osc = ctx.createOscillator();
+      var osc1 = ctx.createOscillator();
+      var osc2 = ctx.createOscillator();
       var gain = ctx.createGain();
-      osc.connect(gain);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
       gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(520, ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.25);
+
+// First tone: soft high note
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(880, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.2);
+
+// Second tone: harmony below
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(660, ctx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.25);
+
+// Volume: gentle fade in then out
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.09, ctx.currentTime + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
+
+      osc1.start(ctx.currentTime);
+      osc1.stop(ctx.currentTime + 0.45);
+      osc2.start(ctx.currentTime + 0.05); // slight delay for the second note
+      osc2.stop(ctx.currentTime + 0.45);
     } catch(e) { console.log('sound error:', e); }
     function remove() {
       toast.classList.remove('on');
