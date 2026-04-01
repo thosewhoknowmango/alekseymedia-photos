@@ -427,11 +427,12 @@ h1.hero-name{
 .portfolio-link:hover{color:var(--ink);border-color:var(--ink);}
 
 /* bento grid */
-.bento{
-  display:grid;
-  grid-template-columns:repeat(24,1fr);
-  grid-template-rows:320px 240px;
-  gap:8px;
+.bento {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  grid-template-rows: 320px 240px;
+  grid-auto-rows: 240px; /* implicit rows get this height */
+  gap: 8px;
 }
 .card{
   position:relative;overflow:hidden;
