@@ -351,7 +351,7 @@ window.addEventListener('load', function() {
 // Subtle corner notifications
 (function() {
   const messages = [
-    'Also check out our partners.',
+    'Also check out @isajevs09',
     'Support me via the link below.',
     'Want to work together? Drop a message.',
     'Follow @alekseymedia.lv for more.',
